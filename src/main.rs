@@ -14,9 +14,9 @@ fn repl(){
         // match command
         match input.trim() {
             "exit 0" => std::process::exit(0),
+            input if input.starts_with("echo") => println!("{}", &input[5..]), 
             _ => println!("{}: command not found", input.trim())
         }
-
     }
 }
 
