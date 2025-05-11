@@ -2,6 +2,7 @@
 use std::io::{self, Write};
 
 fn builtin(input: &str) {
+    // needs refactoring 
     if input == "exit" || input == "echo" || input == "type" {
         println!("{} is a shell builtin", &input);
     } else {
