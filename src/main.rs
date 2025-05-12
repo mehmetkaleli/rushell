@@ -1,9 +1,10 @@
-#[allow(unused_imports)]
 use std::io::{self, Write};
+
+const BUILTIN_COMMANDS: &[&str] = &["exit", "echo", "type"];
 
 fn builtin(input: &str) {
     // needs refactoring 
-    if input == "exit" || input == "echo" || input == "type" {
+    if BUILTIN_COMMANDS.contains(&input) {
         println!("{} is a shell builtin", &input);
     } else {
         println!("{}: not found", &input);
