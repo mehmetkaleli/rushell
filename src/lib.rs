@@ -37,27 +37,43 @@ fn execute_exit() {
     process::exit(0)
 }
 
-fn get_path() -> OsString {
-    env::var_os("PATH").unwrap()
-}
-
 fn execute_type(cmd: &ShellCommand) {
-    // get path env variable
-    let paths = get_path();
-    let cmd_arg = cmd.args[0].as_str();
-    // split paths directories, join directories with cmd_arg
-    // find the file in PATH
-    match env::split_paths(&paths)
-        .map(|path| path.join(cmd_arg))
-        .find(|path| path.is_file())
-    {
-        Some(found_path) => {
-            println!("{} is {}", cmd_arg, found_path.parent().unwrap_or(&found_path).display())
-        }
-        None => {
-            println!("{}: not found", cmd_arg);
+    // check if command is builtin
+    if is_builtin(&cmd.args[0]) {
+        println!("{} is a shell builtin", cmd.args[0]);
+    } else {
+        // get path env variable
+        let paths = get_path();
+        let cmd_arg = cmd.args[0].as_str();
+        // split paths directories, join directories with cmd_arg
+        // find the file in PATH
+        match env::split_paths(&paths)
+            .map(|path| path.join(cmd_arg))
+            .find(|path| path.is_file())
+        {
+            Some(found_path) => {
+                println!("{} is {}", cmd_arg, found_path.parent().unwrap_or(&found_path).display())
+            }
+            None => {
+                println!("{}: not found", cmd_arg);
+            }
         }
     }
 }
 
 fn execute_program(cmd: &ShellCommand) {}
+
+
+
+fn get_path() -> OsString {
+    env::var_os("PATH").unwrap()
+}
+
+fn is_builtin(cmd: &String) -> bool {
+    let builtin_commands = vec!["exit", "echo", "type"];
+    if builtin_commands.iter().any(|&c| c==cmd) {
+        true
+    } else {
+        false
+    }
+}
