@@ -60,11 +60,6 @@ fn execute_type(cmd: &ShellCommand) {
         }
     }
 }
-
-fn execute_program(cmd: &ShellCommand) {}
-
-
-
 fn get_path() -> OsString {
     env::var_os("PATH").unwrap()
 }
