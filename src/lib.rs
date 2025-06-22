@@ -1,4 +1,5 @@
 use std::{env, process};
+use std::ffi::OsString;
 use std::path::PathBuf;
 
 // the command type
@@ -36,17 +37,14 @@ fn execute_exit() {
     process::exit(0)
 }
 
+fn get_path() -> OsString {
+    env::var_os("PATH").unwrap()
+}
+
 fn execute_type(cmd: &ShellCommand) {
     // get path env variable
-    let paths = match env::var_os("PATH") {
-        Some(paths) => paths,
-        None => {
-            println!("Error accessing PATH environment variable");
-            return;
-        }
-    };
+    let paths = get_path();
     let cmd_arg = cmd.args[0].as_str();
-
     // split paths directories, join directories with cmd_arg
     // find the file in PATH
     match env::split_paths(&paths)
@@ -61,3 +59,5 @@ fn execute_type(cmd: &ShellCommand) {
         }
     }
 }
+
+fn execute_program(cmd: &ShellCommand) {}
