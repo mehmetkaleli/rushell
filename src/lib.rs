@@ -1,6 +1,4 @@
 use std::{env, process};
-use std::ffi::OsString;
-use std::path::PathBuf;
 
 // the command type
 #[derive(Debug)]
@@ -43,7 +41,7 @@ fn execute_type(cmd: &ShellCommand) {
         println!("{} is a shell builtin", cmd.args[0]);
     } else {
         // get path env variable
-        let paths = get_path();
+        let paths = env::var_os("PATH").unwrap();
         let cmd_arg = cmd.args[0].as_str();
         // split paths directories, join directories with cmd_arg
         // find the file in PATH
@@ -60,15 +58,6 @@ fn execute_type(cmd: &ShellCommand) {
         }
     }
 }
-
-fn execute_program(cmd: &ShellCommand) {}
-
-
-
-fn get_path() -> OsString {
-    env::var_os("PATH").unwrap()
-}
-
 fn is_builtin(cmd: &String) -> bool {
     let builtin_commands = vec!["exit", "echo", "type"];
     if builtin_commands.iter().any(|&c| c==cmd) {
