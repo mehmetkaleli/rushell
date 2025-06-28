@@ -1,10 +1,11 @@
 use std::{env, process};
+use std::process::Command;
 
 // the command type
 #[derive(Debug)]
 pub struct ShellCommand {
-    command: String,
-    args: Vec<String>
+    pub command: String,
+    pub args: Vec<String>
 }
 
 impl ShellCommand {
@@ -15,6 +16,18 @@ impl ShellCommand {
         ShellCommand { command, args }
     }
 }
+
+pub fn is_builtin(cmd: &String) -> bool {
+    // setup lookup vector
+    let builtin_commands = vec!["exit", "echo", "type"];
+    // check if given command is builtin
+    if builtin_commands.iter().any(|&c| c==cmd) {
+        true
+    } else {
+        false
+    }
+}
+
 // the function that runs the commands
 pub fn run_command(command: ShellCommand) {
     match command.command.as_str() {
@@ -24,6 +37,9 @@ pub fn run_command(command: ShellCommand) {
         _ => println!("{}: command not found", command.command.as_str().trim())
     }
 }
+
+// runs programs that are not builtin shell commands
+pub fn run_program(command: &ShellCommand) {}
 
 fn execute_echo(cmd: &ShellCommand) {
     // print argument
@@ -56,13 +72,5 @@ fn execute_type(cmd: &ShellCommand) {
                 println!("{}: not found", cmd_arg);
             }
         }
-    }
-}
-fn is_builtin(cmd: &String) -> bool {
-    let builtin_commands = vec!["exit", "echo", "type"];
-    if builtin_commands.iter().any(|&c| c==cmd) {
-        true
-    } else {
-        false
     }
 }

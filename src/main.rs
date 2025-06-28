@@ -22,8 +22,14 @@ fn main() {
         // build command
         let shell_command = ShellCommand::build(&command_parts);
 
-        // run command
-        rushell::run_command(shell_command);
+        // check if the cmd is builtin
+        if rushell::is_builtin(&shell_command.command) {
+            // run command
+            rushell::run_command(shell_command);
+           // otherwise run program external program
+        } else {
+            println!("execute program ...");
+        }
     } 
 } 
 
