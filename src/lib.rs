@@ -1,13 +1,13 @@
 use std::{env, process};
-use std::process::Command;
 
-// the command type
+// the ShellCommand type
 #[derive(Debug)]
 pub struct ShellCommand {
     pub command: String,
     pub args: Vec<String>
 }
 
+// build ShellCommand
 impl ShellCommand {
     // parse command into command string and vector of args
     pub fn build(shell_command: &Vec<String>) -> ShellCommand {
@@ -17,6 +17,7 @@ impl ShellCommand {
     }
 }
 
+// util function to check if command is builtin
 pub fn is_builtin(cmd: &String) -> bool {
     // setup lookup vector
     let builtin_commands = vec!["exit", "echo", "type"];
@@ -28,8 +29,8 @@ pub fn is_builtin(cmd: &String) -> bool {
     }
 }
 
-// the function that runs the commands
-pub fn run_command(command: ShellCommand) {
+// run shell commands
+pub fn run_command(command: &ShellCommand) {
     match command.command.as_str() {
         "exit" => execute_exit(),
         "echo" => execute_echo(&command),
@@ -39,8 +40,14 @@ pub fn run_command(command: ShellCommand) {
 }
 
 // runs programs that are not builtin shell commands
-pub fn run_program(command: &ShellCommand) {}
+pub fn run_program(command: &ShellCommand) {
+    process::Command::new(&command.command)
+        .args(&command.args)
+        .spawn()
+        .expect("command failed to start");
+}
 
+// execute builtin commands
 fn execute_echo(cmd: &ShellCommand) {
     // print argument
     println!("{:?}", cmd.args.join(" ").as_str())
@@ -58,6 +65,7 @@ fn execute_type(cmd: &ShellCommand) {
     } else {
         // get path env variable
         let paths = env::var_os("PATH").unwrap();
+        println!("{:?}", paths);
         let cmd_arg = cmd.args[0].as_str();
         // split paths directories, join directories with cmd_arg
         // find the file in PATH

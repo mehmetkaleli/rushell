@@ -25,10 +25,10 @@ fn main() {
         // check if the cmd is builtin
         if rushell::is_builtin(&shell_command.command) {
             // run command
-            rushell::run_command(shell_command);
-           // otherwise run program external program
+            rushell::run_command(&shell_command);
         } else {
-            println!("execute program ...");
+            // otherwise run program external program
+            rushell::run_program(&shell_command);
         }
     } 
 } 
