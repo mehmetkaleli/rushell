@@ -41,6 +41,8 @@ pub fn run_command(command: &ShellCommand) {
 
 // runs programs that are not builtin shell commands
 pub fn run_program(command: &ShellCommand) {
+    println!("cmd {:?}", &command.command);
+    println!("args {:?}", &command.args);
     process::Command::new(&command.command)
         .args(&command.args)
         .spawn()
