@@ -27,6 +27,7 @@ fn main() {
             // run command
             rushell::run_command(&shell_command);
         } else {
+            // TODO: Fix git commit message input
             // otherwise run program external program
             rushell::run_program(&shell_command);
         }
